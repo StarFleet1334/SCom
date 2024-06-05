@@ -27,8 +27,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<Message> inbox;
 
 
