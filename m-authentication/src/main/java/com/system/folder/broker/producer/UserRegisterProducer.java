@@ -17,6 +17,6 @@ public class UserRegisterProducer {
     private KafkaTemplate<String,UserRegisterMessage> kafkaTemplate;
 
     public void publish(UserRegisterMessage userRegisterMessage) {
-        kafkaTemplate.send("t-user-user",userRegisterMessage);
+        kafkaTemplate.send("t-user-register",userRegisterMessage);
     }
 }
