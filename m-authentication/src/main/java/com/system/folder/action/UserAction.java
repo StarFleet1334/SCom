@@ -4,7 +4,9 @@ package com.system.folder.action;
 import com.system.folder.api.request.UserLoginRequest;
 import com.system.folder.api.request.UserRegisterRequest;
 import com.system.folder.broker.message.UserLoginMessage;
+import com.system.folder.broker.message.UserRegisterMessage;
 import com.system.folder.broker.producer.UserLoginProducer;
+import com.system.folder.broker.producer.UserRegisterProducer;
 import com.system.folder.entity.User;
 import com.system.folder.repository.UserRepository;
 import org.slf4j.Logger;
@@ -28,6 +30,9 @@ public class UserAction {
     @Autowired
     private UserLoginProducer userLoginProducer;
 
+    @Autowired
+    private UserRegisterProducer userRegisterProducer;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     public boolean exists(UserRegisterRequest userRegisterRequest) {
@@ -36,6 +41,7 @@ public class UserAction {
 
     public void register(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRegisterProducer.publish(createUserRegisterMessage(user.getEmail()));
         userRepository.save(user);
     }
 
@@ -56,6 +62,12 @@ public class UserAction {
         var useLoginMessage = new UserLoginMessage();
         useLoginMessage.setEmail(email);
         useLoginMessage.setLoginTime(LocalDateTime.now());
+        return useLoginMessage;
+    }
+    private UserRegisterMessage createUserRegisterMessage(String email) {
+        var useLoginMessage = new UserRegisterMessage();
+        useLoginMessage.setEmail(email);
+        useLoginMessage.setRegisterTime(LocalDateTime.now());
         return useLoginMessage;
     }
 
