@@ -15,7 +15,7 @@ public class UserLoginConsumer {
     private UserActionProducer userActionProducer;
 
 
-    @KafkaListener(topics = "t-user-login")
+    @KafkaListener(topics = "t-user-login",containerFactory = "globalLogContainerFactory")
     public void consumer(UserLoginMessage userLoginMessage) {
         userActionProducer.publish(Transformer.transform(userLoginMessage));
     }

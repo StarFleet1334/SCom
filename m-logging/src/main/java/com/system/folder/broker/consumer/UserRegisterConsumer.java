@@ -15,7 +15,7 @@ public class UserRegisterConsumer {
     @Autowired
     private UserActionProducer userActionProducer;
 
-    @KafkaListener(topics = "t-user-register")
+    @KafkaListener(topics = "t-user-register",containerFactory = "globalLogContainerFactory")
     public void consumer(UserRegisterMessage userRegisterMessage) {
         userActionProducer.publish(Transformer.transform(userRegisterMessage));
     }
